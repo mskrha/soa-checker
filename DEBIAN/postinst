@@ -1,0 +1,4 @@
+#! /bin/bash
+
+chown root:root /usr/bin/soa-checker
+chmod 755 /usr/bin/soa-checker

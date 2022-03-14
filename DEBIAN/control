@@ -1,0 +1,8 @@
+Package: soa-checker
+Version: INSTALL_VERSION
+Section: custom
+Priority: optional
+Architecture: amd64
+Installed-Size: INSTALL_SIZE
+Maintainer: Michal Skrha <michal@skrha.cz>
+Description: Simple command-line tool used to check and display DNS zone serial numbers from all nameservers and compare to the (hidden) master.
