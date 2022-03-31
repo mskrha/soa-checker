@@ -112,17 +112,12 @@ func getSerial(d, s string) (ret string, err error) {
 }
 
 func getMaster(d string) (ret string, err error) {
-	conf, err := dns.ClientConfigFromFile("/etc/resolv.conf")
+	srv, err := getResolver()
 	if err != nil {
 		return
 	}
 
-	if len(conf.Servers) == 0 {
-		err = fmt.Errorf("No nameserver found in /etc/resolv.conf")
-		return
-	}
-
-	soa, err := getSOA(d, conf.Servers[0], false)
+	soa, err := getSOA(d, srv, false)
 	if err != nil {
 		return
 	}
