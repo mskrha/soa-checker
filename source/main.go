@@ -5,13 +5,13 @@ import (
 )
 
 func main() {
-	zone, master, format, err := parseArguments()
+	zone, master, serial, format, err := parseArguments()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 
-	data, err := collectData(zone, master)
+	data, err := collectData(zone, master, serial)
 	if err != nil {
 		fmt.Println(err)
 		return

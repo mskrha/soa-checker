@@ -10,7 +10,7 @@ var (
 	version string
 )
 
-func parseArguments() (zone, master, format string, err error) {
+func parseArguments() (zone, master, serial, format string, err error) {
 	if len(os.Args) == 1 {
 		err = fmt.Errorf("SOA checker, ver. %s\n\nNo arguments, use %s -help", version, os.Args[0])
 		return
@@ -18,6 +18,7 @@ func parseArguments() (zone, master, format string, err error) {
 
 	flag.StringVar(&zone, "zone", "", "Zone name")
 	flag.StringVar(&master, "master", "", "(hidden) master for zone")
+	flag.StringVar(&serial, "serial", "", "Manual zone serial")
 	flag.StringVar(&format, "format", "text", "Output format (text / json)")
 	flag.Parse()
 
@@ -26,8 +27,14 @@ func parseArguments() (zone, master, format string, err error) {
 		return
 	}
 
-	if len(master) == 0 {
-		master, err = getMaster(zone)
+	if len(master) == 0 && len(serial) == 0 {
+		err = fmt.Errorf("Either master or serial must be specified")
+		return
+	}
+
+	if len(master) > 0 && len(serial) > 0 {
+		err = fmt.Errorf("Both master and serial must not be specified")
+		return
 	}
 
 	switch format {
@@ -40,13 +47,25 @@ func parseArguments() (zone, master, format string, err error) {
 	return
 }
 
-func collectData(z, m string) (ret Data, err error) {
-	ret.Slaves, err = getNS(z, m, true)
-	if err != nil {
-		return
+func collectData(z, m, s string) (ret Data, err error) {
+	if len(m) == 0 {
+		m, err = getResolver()
+		if err != nil {
+			return
+		}
+		if len(s) == 0 {
+			err = fmt.Errorf("No master neither serial specified")
+			return
+		}
+		ret.Master = s
+	} else {
+		ret.Master, err = getSerial(z, m)
+		if err != nil {
+			return
+		}
 	}
 
-	ret.Master, err = getSerial(z, m)
+	ret.Slaves, err = getNS(z, m, false)
 	if err != nil {
 		return
 	}
