@@ -111,21 +111,6 @@ func getSerial(d, s string) (ret string, err error) {
 	return
 }
 
-func getMaster(d string) (ret string, err error) {
-	srv, err := getResolver()
-	if err != nil {
-		return
-	}
-
-	soa, err := getSOA(d, srv, false)
-	if err != nil {
-		return
-	}
-
-	ret = soa.Ns
-	return
-}
-
 func nsToIPs(ns string) (ret NS, err error) {
 	h, err := net.LookupHost(ns)
 	if err != nil {
