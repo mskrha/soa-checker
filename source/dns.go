@@ -163,3 +163,18 @@ func nsToIPs(ns string) (ret NS, err error) {
 
 	return
 }
+
+func getResolver() (ret string, err error) {
+	conf, err := dns.ClientConfigFromFile("/etc/resolv.conf")
+	if err != nil {
+		return
+	}
+
+	if len(conf.Servers) == 0 {
+		err = fmt.Errorf("No nameserver found in /etc/resolv.conf")
+		return
+	}
+
+	ret = conf.Servers[0]
+	return
+}
