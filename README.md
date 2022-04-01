@@ -1,5 +1,3 @@
-[![Go Report Card](https://goreportcard.com/badge/github.com/mskrha/soa-checker)](https://goreportcard.com/report/github.com/mskrha/soa-checker)
-
 ## soa-checker
 
 ### Description
